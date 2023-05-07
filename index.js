@@ -11,46 +11,37 @@ program.parse(process.argv);
 
 const argv = program.opts();
 
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-} = require("./contacts");
+const contactService = require("./contacts");
 
-function invokeAction({ action, id, name, email, phone }) {
+const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
     case "list":
-          listContacts();
+      const allContacts = await contactService.listContacts();
+      console.log(allContacts);
       break;
 
     case "get":
-      // ... id
-          getContactById();
+      const oneContact = await contactService.getContactById(id);
+      console.log(oneContact);
       break;
 
     case "add":
-      // ... name email phone
-          addContact();
+      const newContact = await contactService.addContact({
+        name,
+        email,
+        phone,
+      });
+      console.log(newContact);
       break;
 
     case "remove":
-      // ... id
-          removeContact();
+      const rmContact = await contactService.removeContact(id);
+      console.log(rmContact);
       break;
 
     default:
       console.warn("\x1B[31m Unknown action type!");
   }
-}
+};
 
 invokeAction(argv);
-
-// const actionIndex = process.argv.indexOf
-//хотів би наполегливо попросити у вас до дз докладати скріншоти в readme файл, без посилань на сторонні сервіси, на яких потрібно реєструватись
-// Try this markdown:
-
-// ![alt text](http://url/to/img.png)
-//![Creating repo from a template step 1](./assets/template-step-1.png)
-// I think you can link directly to the raw version of an image if it's stored in your repository. i.e.
-// ![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
